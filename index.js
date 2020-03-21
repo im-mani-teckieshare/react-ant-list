@@ -3,19 +3,23 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
 import { List, message, Avatar, Spin } from 'antd';
+
 import reqwest from 'reqwest';
 
-import InfiniteScroll from 'react-infinite-scroller';
+import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller';
+import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
+import VList from 'react-virtualized/dist/commonjs/List';
+import InfiniteLoader from 'react-virtualized/dist/commonjs/InfiniteLoader';
 
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
 
-class InfiniteListExample extends React.Component {
+class VirtualizedExample extends React.Component {
   state = {
     data: [],
     loading: false,
-    hasMore: true,
-    
   };
+
+  loadedRowsMap = {};
 
   componentDidMount() {
     this.fetchData(res => {
@@ -37,15 +41,18 @@ class InfiniteListExample extends React.Component {
     });
   };
 
-  handleInfiniteOnLoad = () => {
+  handleInfiniteOnLoad = ({ startIndex, stopIndex }) => {
     let { data } = this.state;
     this.setState({
       loading: true,
     });
-    if (data.length > 1000) {
-      message.warning('Infinite List loaded all');
+    for (let i = startIndex; i <= stopIndex; i++) {
+      // 1 means loading
+      this.loadedRowsMap[i] = 1;
+    }
+    if (data.length > 19) {
+      message.warning('Virtualized List loaded all');
       this.setState({
-        hasMore: false,
         loading: false,
       });
       return;
@@ -59,41 +66,78 @@ class InfiniteListExample extends React.Component {
     });
   };
 
-  render() {
+  isRowLoaded = ({ index }) => !!this.loadedRowsMap[index];
+
+  renderItem = ({ index, key, style }) => {
+    const { data } = this.state;
+    const item = data[index];
     return (
-      <div className="demo-infinite-container">
-        <InfiniteScroll
-          initialLoad={false}
-          pageStart={0}
-          loadMore={this.handleInfiniteOnLoad}
-          hasMore={!this.state.loading && this.state.hasMore}
-          useWindow={false}
-        >
-          <List
-            dataSource={this.state.data}
-            renderItem={item => (
-              <List.Item key={item.id}>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                  }
-                  title={<a href="https://ant.design">{item.name.last}</a>}
-                  description={item.email}
-                />
-                <div>Content</div>
-              </List.Item>
-            )}
-          >
-            {this.state.loading && this.state.hasMore && (
-              <div className="demo-loading-container">
-                <Spin />
-              </div>
-            )}
-          </List>
-        </InfiniteScroll>
-      </div>
+      <List.Item key={key} style={style}>
+        <List.Item.Meta
+          avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+          title={<a href="https://ant.design">{item.name.last}</a>}
+          description={item.email}
+        />
+        <div>Content</div>
+      </List.Item>
+    );
+  };
+
+  render() {
+    const { data } = this.state;
+    const vlist = ({ height, isScrolling, onChildScroll, scrollTop, onRowsRendered, width }) => (
+      <VList
+        autoHeight
+        height={height}
+        isScrolling={isScrolling}
+        onScroll={onChildScroll}
+        overscanRowCount={2}
+        rowCount={data.length}
+        rowHeight={73}
+        rowRenderer={this.renderItem}
+        onRowsRendered={onRowsRendered}
+        scrollTop={scrollTop}
+        width={width}
+      />
+    );
+    const autoSize = ({ height, isScrolling, onChildScroll, scrollTop, onRowsRendered }) => (
+      <AutoSizer disableHeight>
+        {({ width }) =>
+          vlist({
+            height,
+            isScrolling,
+            onChildScroll,
+            scrollTop,
+            onRowsRendered,
+            width,
+          })
+        }
+      </AutoSizer>
+    );
+    const infiniteLoader = ({ height, isScrolling, onChildScroll, scrollTop }) => (
+      <InfiniteLoader
+        isRowLoaded={this.isRowLoaded}
+        loadMoreRows={this.handleInfiniteOnLoad}
+        rowCount={data.length}
+      >
+        {({ onRowsRendered }) =>
+          autoSize({
+            height,
+            isScrolling,
+            onChildScroll,
+            scrollTop,
+            onRowsRendered,
+          })
+        }
+      </InfiniteLoader>
+    );
+    return (
+      <List>
+        {data.length > 0 && <WindowScroller>{infiniteLoader}</WindowScroller>}
+        {this.state.loading && <Spin className="demo-loading" />}
+      </List>
     );
   }
 }
 
-ReactDOM.render(<InfiniteListExample />, document.getElementById('container'));
+ReactDOM.render(<VirtualizedExample />, document.getElementById('container'));
