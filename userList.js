@@ -34,20 +34,22 @@ fetchData = callback => {
     });
   };
 
-render(){
-  const {dataList} = this.state;
-return  (<List
-    itemLayout="horizontal"
-    dataSource={dataList}
-    renderItem={item => (
-      <List.Item>
+renderItem = item => {
+ return <List.Item>
         <List.Item.Meta
           avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
           title={item.name.last}
           description={item.email}
         />
       </List.Item>
-    )}
+}
+
+render(){
+  const {dataList} = this.state;
+return  (<List
+    itemLayout="horizontal"
+    dataSource={dataList}
+    renderItem={this.renderItem}
   />)
 }
 
