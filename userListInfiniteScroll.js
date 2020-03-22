@@ -48,6 +48,8 @@ renderItem = item => {
 }
 
 onLoadMore = ()=>{
+       message.warning('Infinite List loaded all');
+       console.log('comes scroll')
   this.setState({
     loading: true
   });
