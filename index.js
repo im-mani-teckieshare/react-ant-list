@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
 import { List, message, Avatar, Spin } from 'antd';
+import UserList from './userList';
 
 import reqwest from 'reqwest';
 
@@ -140,4 +141,4 @@ class VirtualizedExample extends React.Component {
   }
 }
 
-ReactDOM.render(<VirtualizedExample />, document.getElementById('container'));
+ReactDOM.render(<UserList />, document.getElementById('container'));
