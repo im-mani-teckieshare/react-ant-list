@@ -8,7 +8,7 @@ import { SmallDashOutlined } from '@ant-design/icons';
 import reqwest from 'reqwest';
 
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
-export default class UserList extends React.Component{
+export default class UserListLoadMore extends React.Component{
 
 state = {
   dataList:[],
