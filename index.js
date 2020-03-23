@@ -146,4 +146,7 @@ class VirtualizedExample extends React.Component {
 ReactDOM.render(<div style={{height:"100%",flex: "1 1 auto",display:"flex"}}>
 {/* <UserListLoadMore/>*/}
 {/* < UserListInfiniteScroll/>*/}
-<UserListVirtualization/></div>, document.getElementById('container'));
+<UserListVirtualization/>
+
+
+</div>, document.getElementById('container'));

@@ -5,15 +5,14 @@ import "./index.css";
 import { List, message, Avatar, Spin, Button, Icon, message } from "antd";
 import { SmallDashOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroller";
-import {AutoSizer} from 'react-virtualized'; 
-import VList from 'react-virtualized/dist/commonjs/List';
-import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller';
-import InfiniteLoader from 'react-virtualized/dist/commonjs/InfiniteLoader';
+import { AutoSizer } from "react-virtualized";
+import VList from "react-virtualized/dist/commonjs/List";
+import WindowScroller from "react-virtualized/dist/commonjs/WindowScroller";
+import InfiniteLoader from "react-virtualized/dist/commonjs/InfiniteLoader";
 import reqwest from "reqwest";
 
-
 const fakeDataUrl =
-  "https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo";
+  "https://randomuser.me/api/?results=15&inc=name,gender,email,nat&noinfo";
 export default class UserListVirtualization extends React.Component {
   state = {
     dataList: [],
@@ -50,13 +49,14 @@ export default class UserListVirtualization extends React.Component {
     });
   };
 
-  renderItem = ({key, // Unique key within array of rows
-  index, // Index of row within collection
-  isScrolling, // The List is currently being scrolled
-  isVisible, // This row is visible within the List (eg it is not an overscanned row)
-  style, // Style object to be applied to row (to position it)
+  renderItem = ({
+    key, // Unique key within array of rows
+    index, // Index of row within collection
+    isScrolling, // The List is currently being scrolled
+    isVisible, // This row is visible within the List (eg it is not an overscanned row)
+    style // Style object to be applied to row (to position it)
   }) => {
-    let {dataList} = this.state;
+    let { dataList } = this.state;
     let item = dataList[index];
     return (
       <List.Item key={key} style={style}>
@@ -71,18 +71,17 @@ export default class UserListVirtualization extends React.Component {
     );
   };
 
-
- isRowLoaded = ({ index }) => !!this.loadedRowsMap[index];
+  isRowLoaded = ({ index }) => !!this.loadedRowsMap[index];
 
   handleInfiniteOnLoad = ({ startIndex, stopIndex }) => {
     this.setState({
-      loading: true,
+      loading: true
     });
     for (let i = startIndex; i <= stopIndex; i++) {
       // 1 means loading
       this.loadedRowsMap[i] = 1;
     }
-   this.onLoadMore();
+    this.onLoadMore();
   };
   onLoadMore = () => {
     this.setState({
@@ -92,7 +91,7 @@ export default class UserListVirtualization extends React.Component {
       const { dataList } = this.state;
       dataList = [...dataList, ...res.results];
 
-      if (dataList.length > 40) {
+      if (dataList.length > 400) {
         message.warning("Infinite List loaded all");
         this.setState({
           loadMore: false
@@ -106,30 +105,47 @@ export default class UserListVirtualization extends React.Component {
   };
   render() {
     const { dataList, loadMore, loading } = this.state;
-    const {listHeight,listRowHeight,
-    overscanRowCount,scrollToIndex,
-    showScrollingPlaceholder,
-    useDynamicRowHeight} = this.state;
+    const {
+      listHeight,
+      listRowHeight,
+      overscanRowCount,
+      scrollToIndex,
+      showScrollingPlaceholder,
+      useDynamicRowHeight
+    } = this.state;
 
-    const vlist = ({ height, isScrolling, onChildScroll, scrollTop, onRowsRendered, width }) => {
-   return(
-      <VList
-        autoHeight
-        height={height}
-        overscanRowCount={overscanRowCount}
-        rowCount={dataList.length}
-        rowHeight={listRowHeight}
-        rowRenderer={this.renderItem}
-         isScrolling={isScrolling}
-        onScroll={onChildScroll}
-         onRowsRendered={onRowsRendered}
-         width={width}
-      />
-    )
-    
-};
+    const vlist = ({
+      height,
+      isScrolling,
+      onChildScroll,
+      scrollTop,
+      onRowsRendered,
+      width
+    }) => {
+      return (
+        <VList
+          autoHeight
+          height={height}
+          isScrolling={isScrolling}
+          onScroll={onChildScroll}
+          overscanRowCount={2}
+          rowCount={dataList.length}
+          rowHeight={listRowHeight}
+          rowRenderer={this.renderItem}
+          onRowsRendered={onRowsRendered}
+          width={width}
+          scrollTop={scrollTop}
+        />
+      );
+    };
 
-   const autoSize = ({ height, isScrolling, onChildScroll, scrollTop, onRowsRendered }) => (
+    const autoSize = ({
+      height,
+      isScrolling,
+      onChildScroll,
+      scrollTop,
+      onRowsRendered
+    }) => (
       <AutoSizer disableHeight>
         {({ width }) =>
           vlist({
@@ -138,7 +154,7 @@ export default class UserListVirtualization extends React.Component {
             onChildScroll,
             scrollTop,
             onRowsRendered,
-            width,
+            width
           })
         }
       </AutoSizer>
@@ -159,11 +175,17 @@ export default class UserListVirtualization extends React.Component {
       </div>
     ) : null;
 
-const infiniteLoader = ({ height, isScrolling, onChildScroll, scrollTop }) => (
+    const infiniteLoader = ({
+      height,
+      isScrolling,
+      onChildScroll,
+      scrollTop
+    }) => (
       <InfiniteLoader
         isRowLoaded={this.isRowLoaded}
         loadMoreRows={this.handleInfiniteOnLoad}
         rowCount={dataList.length}
+        threshold={5}
       >
         {({ onRowsRendered }) =>
           autoSize({
@@ -171,26 +193,24 @@ const infiniteLoader = ({ height, isScrolling, onChildScroll, scrollTop }) => (
             isScrolling,
             onChildScroll,
             scrollTop,
-            onRowsRendered,
+            onRowsRendered
           })
         }
       </InfiniteLoader>
     );
 
     return (
-          <List
-            itemLayout="horizontal"
-            header={"Header"}
-            loading={loading && loadMore}
-            footer={dataList.length}
-            style = {{height:"100%",flex: "1 1 auto",}}
-          >
-          <WindowScroller style={{overflow:"auto"}}>
-          
-          {infiniteLoader}
-          
+        <List
+          itemLayout="horizontal"
+          header={"Header"}
+          loading={loading && loadMore}
+          footer={dataList.length}
+          style={{ height: "100%", flex: "1 1 auto" }}
+        >
+          <WindowScroller style={{ overflow: "auto" }}>
+            {infiniteLoader}
           </WindowScroller>
-          </List>
+        </List>
     );
   }
 }
