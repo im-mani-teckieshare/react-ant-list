@@ -5,6 +5,7 @@ import './index.css';
 import { List, message, Avatar, Spin } from 'antd';
 import UserListLoadMore from './userListLoadMore';
 import UserListInfiniteScroll from './userListInfiniteScroll';
+import UserListVirtualization from './userListVirtualization';
 
 import reqwest from 'reqwest';
 
@@ -144,4 +145,5 @@ class VirtualizedExample extends React.Component {
 
 ReactDOM.render(<div>
 {/* <UserListLoadMore/>*/}
-<UserListInfiniteScroll/></div>, document.getElementById('container'));
+{/* < UserListInfiniteScroll/>*/}
+<UserListVirtualization/></div>, document.getElementById('container'));

@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { List, message, Avatar, Spin, Button, Icon } from 'antd';
+import { List, message, Avatar, Spin, Button, Icon,message } from 'antd';
 import { SmallDashOutlined } from '@ant-design/icons';
-
+import InfiniteScroll from 'react-infinite-scroller';
 import reqwest from 'reqwest';
 
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
@@ -48,6 +48,8 @@ renderItem = item => {
 }
 
 onLoadMore = ()=>{
+       message.warning('Infinite List loaded all');
+       console.log('comes scroll')
   this.setState({
     loading: true
   });
@@ -56,6 +58,7 @@ onLoadMore = ()=>{
     dataList = [...dataList,...res.results];
 
     if(dataList.length > 40){
+       message.warning('Infinite List loaded all');
       this.setState({
         loadMore:false
       })
@@ -82,14 +85,26 @@ render(){
           <Button type="link" size="large" onClick={this.onLoadMore}><SmallDashOutlined style={{fontSize:"2.2rem"}} /></Button>
         </div>
       ) : null;
-return  (<List
+return  (
+      <div className="demo-infinite-container">
+        <InfiniteScroll
+          initialLoad={false}
+          pageStart={0}
+          loadMore={this.onLoadMore}
+          hasMore={!loading && loadMore}
+          useWindow={false}
+        >
+  
+  <List
     itemLayout="horizontal"
     dataSource={dataList}
     header = {"Header"}
     renderItem={this.renderItem}
-    loadMore={showLoadMore}
-    loading={loading}
-  />)
+    loading={loading && loadMore}
+    footer = {dataList.length}
+  />
+  </InfiniteScroll>
+  </div>)
 }
 
 }
