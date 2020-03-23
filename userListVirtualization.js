@@ -55,7 +55,6 @@ export default class UserListVirtualization extends React.Component {
   }) => {
     let {dataList} = this.state;
     let item = dataList[index];
-  console.log('comes render')
     return (
       <List.Item key={key} style={style}>
         <List.Item.Meta
@@ -70,7 +69,6 @@ export default class UserListVirtualization extends React.Component {
   };
 
   onLoadMore = () => {
-    console.log("comes scroll");
     this.setState({
       loading: true
     });
