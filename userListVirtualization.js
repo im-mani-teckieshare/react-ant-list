@@ -17,7 +17,7 @@ export default class UserListVirtualization extends React.Component {
     loading: true,
     loadMore: true,
     listHeight: 300,
-    listRowHeight: 50,
+    listRowHeight: 100,
     overscanRowCount: 10,
     scrollToIndex: undefined,
     showScrollingPlaceholder: false,
@@ -45,32 +45,29 @@ export default class UserListVirtualization extends React.Component {
     });
   };
 
-  renderItem = (key, // Unique key within array of rows
+  renderItem = ({key, // Unique key within array of rows
   index, // Index of row within collection
   isScrolling, // The List is currently being scrolled
   isVisible, // This row is visible within the List (eg it is not an overscanned row)
   style, // Style object to be applied to row (to position it)
-  ) => {
-    console.log('comes')
+  }) => {
     let {dataList} = this.state;
     let item = dataList[index];
-    console.log(index);
 
     return (
-      <List.Item key={index}>
+      <List.Item key={key} style={style}>
         <List.Item.Meta
           avatar={
             <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
           }
-          // title={item.name.last}
-          // description={item.email}
+          title={item.name.last}
+          description={item.email}
         />
       </List.Item>
     );
   };
 
   onLoadMore = () => {
-    message.warning("Infinite List loaded all");
     console.log("comes scroll");
     this.setState({
       loading: true
@@ -103,11 +100,11 @@ const vList = () => (
         autoHeight
         height={listHeight}
         overscanRowCount={overscanRowCount}
-        rowCount={5}
+        rowCount={dataList.length}
         rowHeight={listRowHeight}
         rowRenderer={this.renderItem}
         scrollTop={0}
-         width={300}
+         width={"100"}
       />
     );
 
