@@ -7,9 +7,9 @@ import { SmallDashOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroller";
 import {AutoSizer} from 'react-virtualized'; 
 import VList from 'react-virtualized/dist/commonjs/List';
+import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller';
 import reqwest from "reqwest";
 
-import 'react-virtualized/styles.css'; // only needs to be imported once
 
 const fakeDataUrl =
   "https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo";
@@ -97,7 +97,7 @@ export default class UserListVirtualization extends React.Component {
     showScrollingPlaceholder,
     useDynamicRowHeight} = this.state;
 
-const vList = (height,width) =>{
+    const vlist = ({ height, isScrolling, onChildScroll, scrollTop, onRowsRendered, width }) => {
    return(
       <VList
         autoHeight
@@ -107,22 +107,26 @@ const vList = (height,width) =>{
         rowHeight={listRowHeight}
         rowRenderer={this.renderItem}
         scrollTop={0}
-         width={300}
+         width={width}
       />
     )
     
 };
 
-    const autoSizer = (height,width)=>(
-      <AutoSizer
-    >
-    {({height, width}) => {
-      vList(height,width)
-      
-      }
-    }
-    </AutoSizer>
-    )
+   const autoSize = ({ height, isScrolling, onChildScroll, scrollTop, onRowsRendered }) => (
+      <AutoSizer disableHeight>
+        {({ width }) =>
+          vlist({
+            height,
+            isScrolling,
+            onChildScroll,
+            scrollTop,
+            onRowsRendered,
+            width,
+          })
+        }
+      </AutoSizer>
+    );
 
     const showLoadMore = loadMore ? (
       <div
@@ -147,7 +151,7 @@ const vList = (height,width) =>{
             footer={dataList.length}
             style = {{height:"100%",flex: "1 1 auto"}}
           >
-          {autoSizer()}
+          <WindowScroller>{autoSize}</WindowScroller>
           </List>
     );
   }
