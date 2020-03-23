@@ -98,8 +98,6 @@ export default class UserListVirtualization extends React.Component {
     useDynamicRowHeight} = this.state;
 
 const vList = (height,width) =>{
-  console.log('helloe',height,width)
-  
    return(
       <VList
         autoHeight
