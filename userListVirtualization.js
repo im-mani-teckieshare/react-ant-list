@@ -19,7 +19,7 @@ export default class UserListVirtualization extends React.Component {
     loading: true,
     loadMore: true,
     listHeight: 300,
-    listRowHeight: 100,
+    listRowHeight: 60,
     overscanRowCount: 10,
     scrollToIndex: undefined,
     showScrollingPlaceholder: false,
