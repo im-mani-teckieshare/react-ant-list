@@ -45,9 +45,18 @@ export default class UserListVirtualization extends React.Component {
     });
   };
 
-  renderItem = item => {
+  renderItem = (key, // Unique key within array of rows
+  index, // Index of row within collection
+  isScrolling, // The List is currently being scrolled
+  isVisible, // This row is visible within the List (eg it is not an overscanned row)
+  style, // Style object to be applied to row (to position it)
+  ) => {
+    console.log('comes')
+    let {dataList} = this.state;
+    let item = dataList[index];
+    console.log(index);
     return (
-      <List.Item>
+      <List.Item key={key}>
         <List.Item.Meta
           avatar={
             <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
@@ -88,19 +97,15 @@ export default class UserListVirtualization extends React.Component {
     showScrollingPlaceholder,
     useDynamicRowHeight} = this.state;
 
-const vList = () =>(
+const vList = () => (
       <VList
         autoHeight
         height={listHeight}
-        isScrolling={isScrolling}
-        onScroll={onChildScroll}
-        overscanRowCount={2}
-        rowCount={dataList.length}
+        overscanRowCount={overscanRowCount}
+        rowCount={5}
         rowHeight={listRowHeight}
         rowRenderer={this.renderItem}
-        onRowsRendered={onRowsRendered}
-        scrollTop={scrollTop}
-        width={width}
+        scrollTop={0}
       />
     );
 
@@ -118,6 +123,8 @@ const vList = () =>(
         </Button>
       </div>
     ) : null;
+
+    console.log(dataList)
     return (
       <div className="demo-infinite-container">
         <InfiniteScroll
@@ -129,12 +136,14 @@ const vList = () =>(
         >
           <List
             itemLayout="horizontal"
-            dataSource={dataList}
+            // dataSource={dataList}
             header={"Header"}
-            renderItem={this.renderItem}
+            // renderItem={this.renderItem}
             loading={loading && loadMore}
             footer={dataList.length}
-          />
+          >
+          {vList()}
+          </List>
         </InfiniteScroll>
       </div>
     );
