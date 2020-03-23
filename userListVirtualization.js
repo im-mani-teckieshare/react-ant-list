@@ -8,6 +8,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import {AutoSizer} from 'react-virtualized'; 
 import VList from 'react-virtualized/dist/commonjs/List';
 import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller';
+import InfiniteLoader from 'react-virtualized/dist/commonjs/InfiniteLoader';
 import reqwest from "reqwest";
 
 
@@ -25,6 +26,8 @@ export default class UserListVirtualization extends React.Component {
     showScrollingPlaceholder: false,
     useDynamicRowHeight: false
   };
+
+  loadedRowsMap = {};
 
   componentDidMount() {
     this.fetchData(res => {
@@ -68,6 +71,19 @@ export default class UserListVirtualization extends React.Component {
     );
   };
 
+
+ isRowLoaded = ({ index }) => !!this.loadedRowsMap[index];
+ 
+  handleInfiniteOnLoad = ({ startIndex, stopIndex }) => {
+    this.setState({
+      loading: true,
+    });
+    for (let i = startIndex; i <= stopIndex; i++) {
+      // 1 means loading
+      this.loadedRowsMap[i] = 1;
+    }
+   this.onLoadMore();
+  };
   onLoadMore = () => {
     this.setState({
       loading: true
@@ -141,6 +157,24 @@ export default class UserListVirtualization extends React.Component {
       </div>
     ) : null;
 
+const infiniteLoader = ({ height, isScrolling, onChildScroll, scrollTop }) => (
+      <InfiniteLoader
+        isRowLoaded={this.isRowLoaded}
+        loadMoreRows={this.handleInfiniteOnLoad}
+        rowCount={dataList.length}
+      >
+        {({ onRowsRendered }) =>
+          autoSize({
+            height,
+            isScrolling,
+            onChildScroll,
+            scrollTop,
+            onRowsRendered,
+          })
+        }
+      </InfiniteLoader>
+    );
+
     return (
           <List
             itemLayout="horizontal"
@@ -149,7 +183,7 @@ export default class UserListVirtualization extends React.Component {
             footer={dataList.length}
             style = {{height:"100%",flex: "1 1 auto"}}
           >
-          <WindowScroller>{autoSize}</WindowScroller>
+          <WindowScroller>{infiniteLoader}</WindowScroller>
           </List>
     );
   }
