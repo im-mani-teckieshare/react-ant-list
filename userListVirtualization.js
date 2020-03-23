@@ -55,14 +55,15 @@ export default class UserListVirtualization extends React.Component {
     let {dataList} = this.state;
     let item = dataList[index];
     console.log(index);
+
     return (
-      <List.Item key={key}>
+      <List.Item key={index}>
         <List.Item.Meta
           avatar={
             <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
           }
-          title={item.name.last}
-          description={item.email}
+          // title={item.name.last}
+          // description={item.email}
         />
       </List.Item>
     );
@@ -106,6 +107,7 @@ const vList = () => (
         rowHeight={listRowHeight}
         rowRenderer={this.renderItem}
         scrollTop={0}
+         width={300}
       />
     );
 
@@ -124,7 +126,6 @@ const vList = () => (
       </div>
     ) : null;
 
-    console.log(dataList)
     return (
       <div className="demo-infinite-container">
         <InfiniteScroll
