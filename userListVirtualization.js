@@ -5,9 +5,11 @@ import "./index.css";
 import { List, message, Avatar, Spin, Button, Icon, message } from "antd";
 import { SmallDashOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroller";
-import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
+import {AutoSizer} from 'react-virtualized'; 
 import VList from 'react-virtualized/dist/commonjs/List';
 import reqwest from "reqwest";
+
+import 'react-virtualized/styles.css'; // only needs to be imported once
 
 const fakeDataUrl =
   "https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo";
@@ -53,7 +55,7 @@ export default class UserListVirtualization extends React.Component {
   }) => {
     let {dataList} = this.state;
     let item = dataList[index];
-
+  console.log('comes render')
     return (
       <List.Item key={key} style={style}>
         <List.Item.Meta
@@ -95,18 +97,34 @@ export default class UserListVirtualization extends React.Component {
     showScrollingPlaceholder,
     useDynamicRowHeight} = this.state;
 
-const vList = () => (
+const vList = (height,width) =>{
+  console.log('helloe',height,width)
+  
+   return(
       <VList
         autoHeight
-        height={listHeight}
+        height={height}
         overscanRowCount={overscanRowCount}
         rowCount={dataList.length}
         rowHeight={listRowHeight}
         rowRenderer={this.renderItem}
         scrollTop={0}
-         width={"100"}
+         width={300}
       />
-    );
+    )
+    
+};
+
+    const autoSizer = (height,width)=>(
+      <AutoSizer
+    >
+    {({height, width}) => {
+      vList(height,width)
+      
+      }
+    }
+    </AutoSizer>
+    )
 
     const showLoadMore = loadMore ? (
       <div
@@ -124,26 +142,15 @@ const vList = () => (
     ) : null;
 
     return (
-      <div className="demo-infinite-container">
-        <InfiniteScroll
-          initialLoad={false}
-          pageStart={0}
-          loadMore={this.onLoadMore}
-          hasMore={!loading && loadMore}
-          useWindow={false}
-        >
           <List
             itemLayout="horizontal"
-            // dataSource={dataList}
             header={"Header"}
-            // renderItem={this.renderItem}
             loading={loading && loadMore}
             footer={dataList.length}
+            style = {{height:"100%",flex: "1 1 auto"}}
           >
-          {vList()}
+          {autoSizer()}
           </List>
-        </InfiniteScroll>
-      </div>
     );
   }
 }
