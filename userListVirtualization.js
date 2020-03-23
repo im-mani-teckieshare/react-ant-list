@@ -73,7 +73,7 @@ export default class UserListVirtualization extends React.Component {
 
 
  isRowLoaded = ({ index }) => !!this.loadedRowsMap[index];
- 
+
   handleInfiniteOnLoad = ({ startIndex, stopIndex }) => {
     this.setState({
       loading: true,
@@ -120,7 +120,9 @@ export default class UserListVirtualization extends React.Component {
         rowCount={dataList.length}
         rowHeight={listRowHeight}
         rowRenderer={this.renderItem}
-        scrollTop={0}
+         isScrolling={isScrolling}
+        onScroll={onChildScroll}
+         onRowsRendered={onRowsRendered}
          width={width}
       />
     )
@@ -181,9 +183,13 @@ const infiniteLoader = ({ height, isScrolling, onChildScroll, scrollTop }) => (
             header={"Header"}
             loading={loading && loadMore}
             footer={dataList.length}
-            style = {{height:"100%",flex: "1 1 auto"}}
+            style = {{height:"100%",flex: "1 1 auto",}}
           >
-          <WindowScroller>{infiniteLoader}</WindowScroller>
+          <WindowScroller style={{overflow:"auto"}}>
+          
+          {infiniteLoader}
+          
+          </WindowScroller>
           </List>
     );
   }
