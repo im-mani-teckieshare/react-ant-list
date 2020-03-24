@@ -118,33 +118,33 @@ export default class UserListVirtualization extends React.Component {
 
     const vlist = ({
       height,
-      isScrolling,
-      onChildScroll,
+      // isScrolling,
+      // onChildScroll,
       scrollTop,
       onRowsRendered,
       width
     }) => {
       return (
         <VList
-          autoHeight
-          height={height}
-          isScrolling={isScrolling}
-          onScroll={onChildScroll}
+        autoSize
+          height={500}
+          // isScrolling={isScrolling}
+          // onScroll={onChildScroll}
           overscanRowCount={2}
           rowCount={dataList.length}
           rowHeight={listRowHeight}
           rowRenderer={this.renderItem}
           onRowsRendered={onRowsRendered}
           width={width}
-          scrollTop={scrollTop}
+          // scrollTop={scrollTop}
         />
       );
     };
 
     const autoSize = ({
       height,
-      isScrolling,
-      onChildScroll,
+      // isScrolling,
+      // onChildScroll,
       scrollTop,
       onRowsRendered
     }) => (
@@ -152,8 +152,8 @@ export default class UserListVirtualization extends React.Component {
         {({ width }) =>
           vlist({
             height,
-            isScrolling,
-            onChildScroll,
+            // isScrolling,
+            // onChildScroll,
             scrollTop,
             onRowsRendered,
             width
@@ -179,9 +179,9 @@ export default class UserListVirtualization extends React.Component {
 
     const infiniteLoader = ({
       height,
-      isScrolling,
-      onChildScroll,
-      scrollTop
+      // isScrolling,
+      // onChildScroll,
+      // scrollTop
     }) => (
       <InfiniteLoader
         isRowLoaded={this.isRowLoaded}
@@ -192,9 +192,9 @@ export default class UserListVirtualization extends React.Component {
         {({ onRowsRendered }) =>
           autoSize({
             height,
-            isScrolling,
-            onChildScroll,
-            scrollTop,
+            // isScrolling,
+            // onChildScroll,
+            // scrollTop,
             onRowsRendered
           })
         }
@@ -207,11 +207,11 @@ export default class UserListVirtualization extends React.Component {
           header={"Header"}
           loading={loading && loadMore}
           footer={dataList.length}
-          style={{ height: "100%", flex: "1 1 auto" }}
+          style={{flex: "1 1 auto" }}
         >
-          <WindowScroller style={{ overflow: "auto" }}>
-            {infiniteLoader}
-          </WindowScroller>
+          {/* <WindowScroller style={{ overflow: "auto" }}> */}
+            {infiniteLoader(500)}
+          {/* </WindowScroller> */}
         </List>
     );
   }
