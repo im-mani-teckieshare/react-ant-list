@@ -52,7 +52,7 @@ onLoadMore = ()=>{
     loading: true
   });
   this.fetchData(res=>{
-    const {dataList} = this.state;
+    let {dataList} = this.state;
     dataList = [...dataList,...res.results];
 
     if(dataList.length > 40){

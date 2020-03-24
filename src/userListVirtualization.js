@@ -2,13 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "antd/dist/antd.css";
 import "./index.css";
-import { List, message, Avatar, Spin, Button, Icon, message } from "antd";
+import { List, message, Avatar, Button } from "antd";
 import { SmallDashOutlined } from "@ant-design/icons";
-import InfiniteScroll from "react-infinite-scroller";
-import { AutoSizer } from "react-virtualized";
-import VList from "react-virtualized/dist/commonjs/List";
-import WindowScroller from "react-virtualized/dist/commonjs/WindowScroller";
-import InfiniteLoader from "react-virtualized/dist/commonjs/InfiniteLoader";
+
+import {AutoSizer, List as VList, InfiniteLoader,WindowScroller} from 'react-virtualized/dist/commonjs';
+
+// import { AutoSizer } from "react-virtualized";
+// import VList from "react-virtualized/dist/commonjs/List";
+// import WindowScroller from "react-virtualized/dist/commonjs/WindowScroller";
+// import InfiniteLoader from "react-virtualized/dist/commonjs/InfiniteLoader";
 import reqwest from "reqwest";
 
 const fakeDataUrl =
@@ -88,7 +90,7 @@ export default class UserListVirtualization extends React.Component {
       loading: true
     });
     this.fetchData(res => {
-      const { dataList } = this.state;
+      let { dataList } = this.state;
       dataList = [...dataList, ...res.results];
 
       if (dataList.length > 400) {

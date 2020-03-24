@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { List, message, Avatar, Spin, Button, Icon,message } from 'antd';
+import { List, message, Avatar, Spin, Button, Icon } from 'antd';
 import { SmallDashOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
 import reqwest from 'reqwest';
@@ -54,7 +54,7 @@ onLoadMore = ()=>{
     loading: true
   });
   this.fetchData(res=>{
-    const {dataList} = this.state;
+    let {dataList} = this.state;
     dataList = [...dataList,...res.results];
 
     if(dataList.length > 40){
