@@ -6,6 +6,7 @@ import { List, message, Avatar, Spin } from 'antd';
 import UserListLoadMore from './userListLoadMore';
 import UserListInfiniteScroll from './userListInfiniteScroll';
 import UserListVirtualization from './userListVirtualization';
+import UserCard from './userCard';
 
 import reqwest from 'reqwest';
 
@@ -152,6 +153,9 @@ ReactDOM.render(
 
 
 // </div> */}
+<div>
+<UserListVirtualization/>
+  <UserCard/>
+</div>
 
-
-<UserListVirtualization/>, document.getElementById('container'));
+, document.getElementById('container'));
